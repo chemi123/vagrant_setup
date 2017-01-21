@@ -1,10 +1,10 @@
 # dockerコマンド等まとめ
 
-- イメージ  
-- コンテナ  
-- コンテナ内部での操作  
+1. イメージ  
+2. コンテナ  
+3. イメージの作成
 
-## イメージ
+## 1. イメージ
 ### イメージの検索
 例えばcentosイメージを検索する場合
 ```
@@ -46,7 +46,7 @@ $ sudo docker inspect ${image_id}
 $ sudo docker rmi ${image_id}
 ```
 
-## コンテナ
+## 2. コンテナ
 ### コンテナの起動
 このコマンドでの`centos`はイメージ名、以下今回のサンプルではイメージを全てcentosで実行する
 ```
@@ -99,8 +99,41 @@ $ sudo docker start ${container_id}
 $ sudo docker rm ${container_id}
 ```
 
-## コンテナ内部での操作
 ### コンテナにbashでログインする
 ```
-$ 
+// -i: インタラクティブモード
+// -t: ターミナルを指定(イメージ名の後)
+$ sudo docker run -i -t centos /bin/bash 
+```
+
+## 3. イメージの作成　
+### イメージの元となるコンテナの作成
+例としてコンテナにbashでログインした後に以下パッケージのインストール及び設定を行う  
+- vim, zshのインストール
+- useraddで`chemi`を追加
+- root, chemiのログインシェルをzshに変更
+
+終わったら一旦exitでターミナルから抜けてコンテナidを確認する
+```
+$ sudo docker ps -a
+[vagrant@localhost]$ sudo docker ps -a
+CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS                        PORTS               NAMES
+556a332e7449        centos              "/bin/bash"            9 minutes ago       Exited (0) 4 seconds ago                          mad_minsky
+5a88dbabc687        centos              "/bin/bash"            14 minutes ago      Exited (0) 13 minutes ago                         clever_elion
+...
+...
+...
+```
+
+コンテナidを使ってイメージを作成する。コンテナidの後に来る名前は慣習として${ユーザ名}/${わかりやすい名前}を使う模様
+```
+$ sudo docker commit ${container_id} chemi/init // 少し時間かかる
+```
+
+作成したイメージを使ってコンテナを立ち上げる
+```
+$ sudo docker images
+// イメージが出来ていることを確認
+
+$ sudo docker run chemi/init
 ```
