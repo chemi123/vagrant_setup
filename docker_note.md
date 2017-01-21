@@ -135,5 +135,6 @@ $ sudo docker commit ${container_id} chemi/init // 少し時間かかる
 $ sudo docker images
 // イメージが出来ていることを確認
 
-$ sudo docker run chemi/init
+$ sudo docker run chemi/init echo "hoge"
+hoge
 ```
